@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "tutorial",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "concurrently -k \"tsc -p ./src/server -w\" \"tsc -p ./src/client -w\" \"nodemon ./dist/server/server.js\""
   },
   "repository": {
     "type": "git",
@@ -22,6 +22,7 @@
     "three": "^0.119.1"
   },
   "devDependencies": {
+    "concurrently": "^5.3.0",
     "nodemon": "^2.0.4"
   }
 }
