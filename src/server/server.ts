@@ -1,8 +1,11 @@
+import http from 'http' //@types/node
+import path from 'path' //@types/node
+import express from 'express'
 const port: number = 3000
 
 class App {
-    private server: http.Server
-    private port: number
+    private server: http.Server //set type as a http server
+    private port: number //set port type as number
 
     constructor(port: number) {
         this.port = port
