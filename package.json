@@ -1,0 +1,21 @@
+{
+  "name": "threejs-typescript-tutorial",
+  "version": "1.0.0",
+  "description": "tutorial",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jonathan-alipate/ThreeJS-TypeScript-Tutorial.git"
+  },
+  "author": "Jonathan Alipate",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jonathan-alipate/ThreeJS-TypeScript-Tutorial/issues"
+  },
+  "homepage": "https://github.com/jonathan-alipate/ThreeJS-TypeScript-Tutorial#readme",
+  "dependencies": {
+    "three": "^0.119.1"
+  }
+}
