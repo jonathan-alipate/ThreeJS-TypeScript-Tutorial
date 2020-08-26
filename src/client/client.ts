@@ -1,11 +1,11 @@
 import * as THREE from '/build/three.module.js'
-import { OrbitControls } from '/jsm/controls/OrbitControls'
+import { PointerLockControls } from '/jsm/controls/PointerLockControls'
 import Stats from '/jsm/libs/stats.module'
-import { GUI } from '/jsm/libs/dat.gui.module'
 
 const scene: THREE.Scene = new THREE.Scene()
-const axesHelper = new THREE.AxesHelper(5)
-scene.add(axesHelper)
+
+var light = new THREE.AmbientLight();
+scene.add(light);
 
 const camera: THREE.PerspectiveCamera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000)
 
@@ -13,44 +13,71 @@ const renderer: THREE.WebGLRenderer = new THREE.WebGLRenderer()
 renderer.setSize(window.innerWidth, window.innerHeight)
 document.body.appendChild(renderer.domElement)
 
-const controls = new OrbitControls(camera, renderer.domElement)
-//controls.addEventListener('change', render)
+const menuPanel = document.getElementById('menuPanel');
+const startButton = document.getElementById('startButton');
+// startButton.addEventListener('click', function () {
+//     controls.lock();
+// }, false);
 
-const boxGeometry: THREE.BoxGeometry = new THREE.BoxGeometry()
-const sphereGeometry: THREE.SphereGeometry = new THREE.SphereGeometry()
-const icosahedronGeometry: THREE.IcosahedronGeometry = new THREE.IcosahedronGeometry(1, 0)
-const planeGeometry: THREE.PlaneGeometry = new THREE.PlaneGeometry()
-const torusKnotGeometry: THREE.TorusKnotGeometry = new THREE.TorusKnotGeometry()
-const material: THREE.MeshBasicMaterial = new THREE.MeshBasicMaterial()//{ color: 0x00ff00, wireframe: true })
+const controls = new PointerLockControls(camera, renderer.domElement)
+//controls.addEventListener('change', () => console.log("Controls Change"))
+// controls.addEventListener('lock', () => menuPanel.style.display = 'none');
+// controls.addEventListener('unlock', () => menuPanel.style.display = 'block');
 
-// const texture = new THREE.TextureLoader().load("img/grid.png")
-//material.map = texture
-const envTexture = new THREE.CubeTextureLoader().load(["img/px_50.png", "img/nx_50.png", "img/py_50.png", "img/ny_50.png", "img/pz_50.png", "img/nz_50.png"])
-envTexture.mapping = THREE.CubeReflectionMapping
-envTexture.mapping = THREE.CubeRefractionMapping
-material.envMap = envTexture
 
-const cube: THREE.Mesh = new THREE.Mesh(boxGeometry, material)
-cube.position.x = 5
-scene.add(cube)
 
-const sphere: THREE.Mesh = new THREE.Mesh(sphereGeometry, material)
-sphere.position.x = 3
-scene.add(sphere)
-
-const icosahedron: THREE.Mesh = new THREE.Mesh(icosahedronGeometry, material)
-icosahedron.position.x = 0
-scene.add(icosahedron)
-
+const planeGeometry: THREE.PlaneGeometry = new THREE.PlaneGeometry(100, 100, 50, 50)
+const material: THREE.MeshBasicMaterial = new THREE.MeshBasicMaterial({ color: 0x00ff00, wireframe: true })
 const plane: THREE.Mesh = new THREE.Mesh(planeGeometry, material)
-plane.position.x = -2
+plane.rotateX(-Math.PI / 2)
 scene.add(plane)
 
-const torusKnot: THREE.Mesh = new THREE.Mesh(torusKnotGeometry, material)
-torusKnot.position.x = -5
-scene.add(torusKnot)
+let cubes: THREE.Mesh[] = new Array()
+for (let i = 0; i < 100; i++) {
+    const geo: THREE.BoxGeometry = new THREE.BoxGeometry(Math.random() * 4, Math.random() * 16, Math.random() * 4)
+    const mat: THREE.MeshBasicMaterial = new THREE.MeshBasicMaterial({ wireframe: true })
+    switch (i % 3) {
+        case 0:
+            mat.color = new THREE.Color(0xff0000)
+            break;
+        case 1:
+            mat.color = new THREE.Color(0xffff00)
+            break;
+        case 2:
+            mat.color = new THREE.Color(0x0000ff)
+            break;
+    }
+    const cube = new THREE.Mesh(geo, mat)
+    cubes.push(cube)
+}
+cubes.forEach((c) => {
+    c.position.x = (Math.random() * 100) - 50
+    c.position.z = (Math.random() * 100) - 50
+    c.geometry.computeBoundingBox()
+    c.position.y = (c.geometry.boundingBox.max.y - c.geometry.boundingBox.min.y) / 2
+    scene.add(c)
+});
 
-camera.position.z = 3
+camera.position.y = 1
+camera.position.z = 2
+
+// const onKeyDown = function (event) {
+//     switch (event.keyCode) {
+//         case 87: // w
+//             controls.moveForward(.25)
+//             break;
+//         case 65: // a
+//             controls.moveRight(-.25)
+//             break;
+//         case 83: // s
+//             controls.moveForward(-.25)
+//             break;
+//         case 68: // d
+//             controls.moveRight(.25)
+//             break;
+//     }
+// };
+// document.addEventListener('keydown', onKeyDown, false);
 
 window.addEventListener('resize', onWindowResize, false)
 function onWindowResize() {
@@ -63,51 +90,10 @@ function onWindowResize() {
 const stats = Stats()
 document.body.appendChild(stats.dom)
 
-var options = {
-    side: {
-        "FrontSide": THREE.FrontSide,
-        "BackSide": THREE.BackSide,
-        "DoubleSide": THREE.DoubleSide,
-    },
-    combine: {
-        "MultiplyOperation": THREE.MultiplyOperation,
-        "MixOperation": THREE.MixOperation,
-        "AddOperation": THREE.AddOperation
-    },
-}
-const gui = new GUI()
-
-const materialFolder = gui.addFolder('THREE.Material')
-materialFolder.add(material, 'transparent')
-materialFolder.add(material, 'opacity', 0, 1, 0.01)
-materialFolder.add(material, 'depthTest')
-materialFolder.add(material, 'depthWrite')
-materialFolder.add(material, 'alphaTest', 0, 1, 0.01).onChange(() => updateMaterial())
-materialFolder.add(material, 'visible')
-materialFolder.add(material, 'side', options.side).onChange(() => updateMaterial())
-materialFolder.open()
-
-var data = {
-    color: material.color.getHex(),
-};
-
-var meshBasicMaterialFolder = gui.addFolder('THREE.MeshBasicMaterial');
-
-meshBasicMaterialFolder.addColor(data, 'color').onChange(() => { material.color.setHex(Number(data.color.toString().replace('#', '0x'))) });
-meshBasicMaterialFolder.add(material, 'wireframe');
-meshBasicMaterialFolder.add(material, 'combine', options.combine).onChange(() => updateMaterial())
-meshBasicMaterialFolder.add(material, 'reflectivity', 0, 1);
-meshBasicMaterialFolder.add(material, 'refractionRatio', 0, 1);
-meshBasicMaterialFolder.open()
-
-function updateMaterial() {
-    material.side = Number(material.side)
-    material.combine = Number(material.combine)
-    material.needsUpdate = true
-}
-
 var animate = function () {
     requestAnimationFrame(animate)
+
+    //controls.update()
 
     render()
 
