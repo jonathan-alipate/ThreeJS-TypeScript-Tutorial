@@ -10,12 +10,12 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 const menuPanel = document.getElementById('menuPanel');
 const startButton = document.getElementById('startButton');
-// startButton.addEventListener('click', function () {
-//     controls.lock();
-// }, false);
+startButton.addEventListener('click', function () {
+    controls.lock();
+}, false);
 const controls = new PointerLockControls(camera, renderer.domElement);
 //controls.addEventListener('change', () => console.log("Controls Change"))
-// controls.addEventListener('lock', () => menuPanel.style.display = 'none');
+controls.addEventListener('lock', () => menuPanel.style.display = 'none');
 // controls.addEventListener('unlock', () => menuPanel.style.display = 'block');
 const planeGeometry = new THREE.PlaneGeometry(100, 100, 50, 50);
 const material = new THREE.MeshBasicMaterial({ color: 0x00ff00, wireframe: true });
@@ -49,23 +49,23 @@ cubes.forEach((c) => {
 });
 camera.position.y = 1;
 camera.position.z = 2;
-// const onKeyDown = function (event) {
-//     switch (event.keyCode) {
-//         case 87: // w
-//             controls.moveForward(.25)
-//             break;
-//         case 65: // a
-//             controls.moveRight(-.25)
-//             break;
-//         case 83: // s
-//             controls.moveForward(-.25)
-//             break;
-//         case 68: // d
-//             controls.moveRight(.25)
-//             break;
-//     }
-// };
-// document.addEventListener('keydown', onKeyDown, false);
+const onKeyDown = function (event) {
+    switch (event.keyCode) {
+        case 87: // w
+            controls.moveForward(.25);
+            break;
+        case 65: // a
+            controls.moveRight(-.25);
+            break;
+        case 83: // s
+            controls.moveForward(-.25);
+            break;
+        case 68: // d
+            controls.moveRight(.25);
+            break;
+    }
+};
+document.addEventListener('keydown', onKeyDown, false);
 window.addEventListener('resize', onWindowResize, false);
 function onWindowResize() {
     camera.aspect = window.innerWidth / window.innerHeight;
