@@ -1,12 +1,13 @@
 # Blender MTL File: 'None'
 # Material Count: 1
 
-newmtl Material.001
+newmtl 2
 Ns 225.000000
 Ka 0.358333 0.358333 0.358333
 Kd 0.467201 0.003690 0.021191
 Ks 0.500000 0.500000 0.500000
-Ke 0.110689 0.000000 0.000767
+Ke 0.000000 0.000000 0.000000
 Ni 1.450000
-d 0.675000
-illum 6
+d 1.000000
+illum 3
+map_Kd C:\\Users\\jalip\\Workspace\\ThreeJS-TypeScript-Tutorial\\dist\\client\\img\\grid.png

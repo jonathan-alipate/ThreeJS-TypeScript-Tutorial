@@ -22,6 +22,19 @@ mtlLoader.load('models/monkey.mtl', (materials) => {
     const objLoader = new OBJLoader();
     objLoader.setMaterials(materials);
     objLoader.load('models/monkey.obj', (object) => {
+        object.position.x -= 2;
+        scene.add(object);
+    }, (xhr) => {
+        console.log((xhr.loaded / xhr.total * 100) + '% loaded');
+    }, (error) => {
+        console.log(error);
+    });
+});
+mtlLoader.load('models/monkeyTextured.mtl', (materials) => {
+    materials.preload();
+    const objLoader = new OBJLoader();
+    objLoader.setMaterials(materials);
+    objLoader.load('models/monkeyTextured.obj', (object) => {
         scene.add(object);
     }, (xhr) => {
         console.log((xhr.loaded / xhr.total * 100) + '% loaded');
