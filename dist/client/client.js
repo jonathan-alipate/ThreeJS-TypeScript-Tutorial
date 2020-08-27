@@ -1,71 +1,42 @@
 import * as THREE from '/build/three.module.js';
-import { PointerLockControls } from '/jsm/controls/PointerLockControls';
+import { DragControls } from '/jsm/controls/DragControls';
 import Stats from '/jsm/libs/stats.module';
 const scene = new THREE.Scene();
-var light = new THREE.AmbientLight();
+const axesHelper = new THREE.AxesHelper(5);
+scene.add(axesHelper);
+var light = new THREE.PointLight();
+light.position.set(10, 10, 10);
 scene.add(light);
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
-const menuPanel = document.getElementById('menuPanel');
-const startButton = document.getElementById('startButton');
-startButton.addEventListener('click', function () {
-    controls.lock();
-}, false);
-const controls = new PointerLockControls(camera, renderer.domElement);
-//controls.addEventListener('change', () => console.log("Controls Change"))
-controls.addEventListener('lock', () => menuPanel.style.display = 'none');
-// controls.addEventListener('unlock', () => menuPanel.style.display = 'block');
-const planeGeometry = new THREE.PlaneGeometry(100, 100, 50, 50);
-const material = new THREE.MeshBasicMaterial({ color: 0x00ff00, wireframe: true });
-const plane = new THREE.Mesh(planeGeometry, material);
-plane.rotateX(-Math.PI / 2);
-scene.add(plane);
-let cubes = new Array();
-for (let i = 0; i < 100; i++) {
-    const geo = new THREE.BoxGeometry(Math.random() * 4, Math.random() * 16, Math.random() * 4);
-    const mat = new THREE.MeshBasicMaterial({ wireframe: true });
-    switch (i % 3) {
-        case 0:
-            mat.color = new THREE.Color(0xff0000);
-            break;
-        case 1:
-            mat.color = new THREE.Color(0xffff00);
-            break;
-        case 2:
-            mat.color = new THREE.Color(0x0000ff);
-            break;
-    }
-    const cube = new THREE.Mesh(geo, mat);
-    cubes.push(cube);
-}
-cubes.forEach((c) => {
-    c.position.x = (Math.random() * 100) - 50;
-    c.position.z = (Math.random() * 100) - 50;
-    c.geometry.computeBoundingBox();
-    c.position.y = (c.geometry.boundingBox.max.y - c.geometry.boundingBox.min.y) / 2;
-    scene.add(c);
-});
-camera.position.y = 1;
-camera.position.z = 2;
-const onKeyDown = function (event) {
-    switch (event.keyCode) {
-        case 87: // w
-            controls.moveForward(.25);
-            break;
-        case 65: // a
-            controls.moveRight(-.25);
-            break;
-        case 83: // s
-            controls.moveForward(-.25);
-            break;
-        case 68: // d
-            controls.moveRight(.25);
-            break;
-    }
-};
-document.addEventListener('keydown', onKeyDown, false);
+const geometry = new THREE.BoxGeometry();
+//const material: THREE.MeshPhongMaterial = new THREE.MeshPhongMaterial({ color: 0xff0000, transparent: true })
+//const cube: THREE.Mesh = new THREE.Mesh(geometry, material)
+//scene.add(cube)
+const material = [
+    new THREE.MeshPhongMaterial({ color: 0xff0000, transparent: true }),
+    new THREE.MeshPhongMaterial({ color: 0x00ff00, transparent: true }),
+    new THREE.MeshPhongMaterial({ color: 0x0000ff, transparent: true })
+];
+const cubes = [
+    new THREE.Mesh(geometry, material[0]),
+    new THREE.Mesh(geometry, material[1]),
+    new THREE.Mesh(geometry, material[2])
+];
+cubes[0].position.x = -2;
+cubes[1].position.x = 0;
+cubes[2].position.x = 2;
+cubes.forEach(c => scene.add(c));
+const controls = new DragControls(cubes, camera, renderer.domElement);
+// controls.addEventListener('dragstart', function (event) {
+//     event.object.material.opacity = 0.33
+// })
+// controls.addEventListener('dragend', function (event) {
+//     event.object.material.opacity = 1
+// })
+camera.position.z = 3;
 window.addEventListener('resize', onWindowResize, false);
 function onWindowResize() {
     camera.aspect = window.innerWidth / window.innerHeight;
@@ -77,6 +48,12 @@ const stats = Stats();
 document.body.appendChild(stats.dom);
 var animate = function () {
     requestAnimationFrame(animate);
+    cubes[0].rotation.x += 0.010;
+    cubes[0].rotation.y += 0.011;
+    cubes[1].rotation.x += 0.012;
+    cubes[1].rotation.y += 0.013;
+    cubes[2].rotation.x += 0.014;
+    cubes[2].rotation.y += 0.015;
     //controls.update()
     render();
     stats.update();
