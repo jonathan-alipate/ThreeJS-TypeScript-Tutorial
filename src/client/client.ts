@@ -7,15 +7,15 @@ const scene: THREE.Scene = new THREE.Scene()
 const axesHelper = new THREE.AxesHelper(5)
 scene.add(axesHelper)
 
-var light = new THREE.SpotLight();
-light.position.set(5, 5, 5)
-scene.add(light);
+// var light = new THREE.SpotLight();
+// light.position.set(5, 5, 5)
+// scene.add(light);
 
 const camera: THREE.PerspectiveCamera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000)
 camera.position.z = 2
 
 const renderer: THREE.WebGLRenderer = new THREE.WebGLRenderer()
-//renderer.physicallyCorrectLights = true
+renderer.physicallyCorrectLights = true
 //renderer.shadowMap.enabled = true
 renderer.outputEncoding = THREE.sRGBEncoding
 renderer.setSize(window.innerWidth, window.innerHeight)
