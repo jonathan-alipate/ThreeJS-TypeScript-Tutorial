@@ -57,7 +57,7 @@ var animate = function () {
     cubes[1].rotation.y += 0.013;
     cubes[2].rotation.x += 0.014;
     cubes[2].rotation.y += 0.015;
-    //controls.update()
+    // controls.update()
     render();
     stats.update();
 };
