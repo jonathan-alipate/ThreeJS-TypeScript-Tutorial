@@ -99,10 +99,10 @@ const setAction = (toAction) => {
     if (toAction != activeAction) {
         lastAction = activeAction;
         activeAction = toAction;
-        lastAction.stop();
-        //lastAction.fadeOut(1)
+        // lastAction.stop()
+        lastAction.fadeOut(1);
         activeAction.reset();
-        //activeAction.fadeIn(1)
+        activeAction.fadeIn(1);
         activeAction.play();
     }
 };
