@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "description": "tutorial",
   "scripts": {
-    "dev": "concurrently -k \"tsc -p ./src/server -w\" \"tsc -p ./src/client -w\" \"nodemon ./dist/server/server.js\""
+    "dev": "concurrently -k \"tsc -p ./src/server -w\" \"tsc -p ./src/client -w\" \"nodemon ./dist/server/server.js\"",
+    "start": "node ./dist/server/server.js"
   },
   "repository": {
     "type": "git",
